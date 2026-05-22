@@ -13,7 +13,8 @@ const sendVerificationEmail = async (email, token) => {
       }
     });
 
-    const verificationUrl = `http://localhost:5173/verify?token=${token}`;
+    const baseUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const verificationUrl = `${baseUrl}/verify?token=${token}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
