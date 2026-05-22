@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3000/api';
-export const BACKEND_URL = 'http://localhost:3000';
+const API_BASE_URL = '/api';
+export const BACKEND_URL = '';
 
 // Crear instancia de axios con configuración base
 const api = axios.create({

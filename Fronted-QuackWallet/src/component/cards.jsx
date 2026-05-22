@@ -24,14 +24,17 @@ import {
   IoSettingsOutline,
   IoHomeOutline,
   IoPeopleOutline,
-  IoTrashOutline,
+  IoNotificationsOutline,
+  IoSwapHorizontalOutline,
   IoAddOutline,
   IoArrowBackOutline,
+  IoTrashOutline,
 } from "react-icons/io5";
 
 // API
 import { cardApi } from "../api/cardApi";
 import { userApi, getImageUrl } from "../api/userApi";
+import { transactionApi } from "../api/transactionApi";
 
 import logoSrc from "../assets/Logo_QuackWallet.png";
 
@@ -135,8 +138,9 @@ const SECCIONES = [
 function Sidebar({ user, navigate, handleLogout, nombreUsuario, location, imagenPerfil }) {
   const menuLinks = [
     { name: "Inicio", path: "/home", icon: IoHomeOutline },
-    { name: "Tarjetas", path: "/cards", icon: IoCardOutline },
     { name: "Perfil", path: "/profile", icon: IoPersonCircleOutline },
+    { name: "Tarjetas", path: "/cards", icon: IoCardOutline },
+    { name: "Alertas", path: "/alerts", icon: IoNotificationsOutline },
     { name: "Configuración", path: "/configuracion", icon: IoSettingsOutline },
   ];
 
@@ -472,6 +476,12 @@ export default function Cards() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [txMonto, setTxMonto] = useState("");
+  const [txTipo, setTxTipo] = useState("deposito");
+  const [txIdTarjeta, setTxIdTarjeta] = useState("");
+  const [txLoading, setTxLoading] = useState(false);
+  const [txError, setTxError] = useState("");
+  const [txSuccess, setTxSuccess] = useState("");
 
   // Cargar tarjetas al montar el componente
   const loadUserProfile = useCallback(async () => {
@@ -581,6 +591,34 @@ useEffect(() => {
       setError(err.response?.data?.message || "Error al reactivar tarjeta");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleCreateTransaction = async () => {
+    const montoNum = parseFloat(txMonto);
+    if (!txMonto || isNaN(montoNum) || montoNum <= 0) {
+      setTxError("Ingresa un monto válido");
+      return;
+    }
+    if (!txIdTarjeta) {
+      setTxError("Selecciona una tarjeta");
+      return;
+    }
+    setTxLoading(true);
+    setTxError("");
+    setTxSuccess("");
+    try {
+      await transactionApi.createTransaction(user.id, {
+        monto: montoNum,
+        tipo: txTipo,
+        idTarjeta: txIdTarjeta,
+      });
+      setTxSuccess("Transacción creada exitosamente. Revisa la notificación.");
+      setTxMonto("");
+    } catch (err) {
+      setTxError(err.response?.data?.message || "Error al crear transacción");
+    } finally {
+      setTxLoading(false);
     }
   };
 
@@ -698,14 +736,66 @@ useEffect(() => {
               </Row>
             </div>
           ) : (
-            /* Grid de tarjetas */
-            <Row className="g-4">
-              {tarjetas.map((tarjeta) => (
-                <Col xs={12} sm={6} lg={4} xl={3} key={tarjeta.ID_Tarjetas}>
-                  <CreditCardView card={tarjeta} onClick={() => setSelectedCard(tarjeta)} />
-                </Col>
-              ))}
-            </Row>
+            <>
+              <Row className="g-4">
+                {tarjetas.map((tarjeta) => (
+                  <Col xs={12} sm={6} lg={4} xl={3} key={tarjeta.ID_Tarjetas}>
+                    <CreditCardView card={tarjeta} onClick={() => setSelectedCard(tarjeta)} />
+                  </Col>
+                ))}
+              </Row>
+              <hr className="my-5" />
+              <div>
+                <h4 className="fw-bold mb-3" style={{ color: "#0b1e3d" }}>
+                  <IoSwapHorizontalOutline className="me-2" size={24} />
+                  Realizar Transacción
+                </h4>
+                {txError && <Alert variant="danger" onClose={() => setTxError("")} dismissible>{txError}</Alert>}
+                {txSuccess && <Alert variant="success" onClose={() => setTxSuccess("")} dismissible>{txSuccess}</Alert>}
+                <Row className="g-3 align-items-end">
+                  <Col xs={12} sm={6} md={3}>
+                    <Form.Label className="fw-semibold small">Monto</Form.Label>
+                    <Form.Control
+                      type="number"
+                      placeholder="0.00"
+                      value={txMonto}
+                      onChange={(e) => setTxMonto(e.target.value)}
+                      min="0"
+                      step="0.01"
+                    />
+                  </Col>
+                  <Col xs={12} sm={6} md={3}>
+                    <Form.Label className="fw-semibold small">Tipo</Form.Label>
+                    <Form.Select value={txTipo} onChange={(e) => setTxTipo(e.target.value)}>
+                      <option value="deposito">Depósito</option>
+                      <option value="retiro">Retiro</option>
+                      <option value="transferencia">Transferencia</option>
+                    </Form.Select>
+                  </Col>
+                  <Col xs={12} sm={6} md={3}>
+                    <Form.Label className="fw-semibold small">Tarjeta</Form.Label>
+                    <Form.Select value={txIdTarjeta} onChange={(e) => setTxIdTarjeta(e.target.value)}>
+                      <option value="">Selecciona una tarjeta</option>
+                      {tarjetas.map((t) => (
+                        <option key={t.ID_Tarjetas} value={t.ID_Tarjetas}>
+                          {t.Nombre} (**** {t.Numero ? t.Numero.slice(-4) : '****'}) - ${Number(t.Saldo || 0).toLocaleString()}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Col>
+                  <Col xs={12} sm={6} md={3}>
+                    <Button
+                      variant="warning"
+                      className="fw-bold w-100"
+                      onClick={handleCreateTransaction}
+                      disabled={txLoading}
+                    >
+                      {txLoading ? <Spinner size="sm" /> : <><IoSwapHorizontalOutline className="me-1" size={18} /> Realizar</>}
+                    </Button>
+                  </Col>
+                </Row>
+              </div>
+            </>
           )}
         </Container>
 

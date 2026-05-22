@@ -20,7 +20,8 @@ import {
   IoLogOutOutline, 
   IoSettingsOutline,
   IoHomeOutline,
-  IoPeopleOutline 
+  IoPeopleOutline,
+  IoNotificationsOutline
 } from 'react-icons/io5';
 
 import logoSrc from "../assets/Logo_QuackWallet.png";
@@ -80,8 +81,9 @@ function Sidebar({ user, navigate, handleLogout, nombreUsuario, location, imagen
     
     const menuLinks = [
         { name: "Inicio", path: "/home", icon: IoHomeOutline },
-        { name: "Tarjetas", path: "/cards", icon: IoCardOutline }, 
         { name: "Perfil", path: "/profile", icon: IoPersonCircleOutline },
+        { name: "Tarjetas", path: "/cards", icon: IoCardOutline },
+        { name: "Alertas", path: "/alerts", icon: IoNotificationsOutline },
         { name: "Configuración", path: "/configuracion", icon: IoSettingsOutline },
     ];
 
@@ -254,7 +256,6 @@ export default function Home() {
     if (logout) {
       logout();
     }
-    navigate("/login");
   };
 
   // Prevenir la renderización si el usuario aún no se ha verificado

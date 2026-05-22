@@ -19,6 +19,7 @@ import {
   IoPeopleOutline,
   IoLogoGooglePlaystore,
   IoCloudDownloadOutline,
+  IoNotificationsOutline,
 } from "react-icons/io5";
 
 import logoSrc from "../assets/Logo_QuackWallet.png";
@@ -47,8 +48,9 @@ const linkStyle = (isActive) => ({
 function Sidebar({ user, navigate, handleLogout, nombreUsuario, location, imagenPerfil }) {
   const menuLinks = [
     { name: "Inicio", path: "/home", icon: IoHomeOutline },
-    { name: "Tarjetas", path: "/cards", icon: IoCardOutline },
     { name: "Perfil", path: "/profile", icon: IoPersonCircleOutline },
+    { name: "Tarjetas", path: "/cards", icon: IoCardOutline },
+    { name: "Alertas", path: "/alerts", icon: IoNotificationsOutline },
     { name: "Configuración", path: "/configuracion", icon: IoSettingsOutline },
   ];
 
@@ -210,7 +212,6 @@ export default function ComingSoon() {
 
   const handleLogout = () => {
     if (logout) logout();
-    navigate("/login");
   };
 
   if (user === null) {

@@ -24,8 +24,9 @@ import {
   IoSettingsOutline,
   IoHomeOutline,
   IoPeopleOutline,
-  IoCameraOutline,
+  IoNotificationsOutline,
   IoPencilOutline,
+  IoCameraOutline
 } from "react-icons/io5";
 
 // API
@@ -68,8 +69,9 @@ const SECCIONES = [
 function Sidebar({ user, navigate, handleLogout, nombreUsuario, location, imagenPerfil }) {
   const menuLinks = [
     { name: "Inicio", path: "/home", icon: IoHomeOutline },
-    { name: "Tarjetas", path: "/cards", icon: IoCardOutline },
     { name: "Perfil", path: "/profile", icon: IoPersonCircleOutline },
+    { name: "Tarjetas", path: "/cards", icon: IoCardOutline },
+    { name: "Alertas", path: "/alerts", icon: IoNotificationsOutline },
     { name: "Configuración", path: "/configuracion", icon: IoSettingsOutline },
   ];
 

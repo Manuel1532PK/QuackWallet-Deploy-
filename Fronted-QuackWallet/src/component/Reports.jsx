@@ -21,6 +21,7 @@ import {
   IoWalletOutline,
   IoArrowUpOutline,
   IoArrowDownOutline,
+  IoNotificationsOutline,
 } from "react-icons/io5";
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import axios from "axios";
@@ -50,8 +51,9 @@ const linkStyle = (isActive) => ({
 function Sidebar({ user, navigate, handleLogout, nombreUsuario, location, imagenPerfil }) {
   const menuLinks = [
     { name: "Inicio", path: "/home", icon: IoHomeOutline },
-    { name: "Tarjetas", path: "/cards", icon: IoCardOutline },
     { name: "Perfil", path: "/profile", icon: IoPersonCircleOutline },
+    { name: "Tarjetas", path: "/cards", icon: IoCardOutline },
+    { name: "Alertas", path: "/alerts", icon: IoNotificationsOutline },
     { name: "Configuración", path: "/configuracion", icon: IoSettingsOutline },
   ];
 
@@ -154,7 +156,7 @@ export default function Reports() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const API_URL = 'http://localhost:3000/api';
+  const API_URL = '/api';
 
   const loadData = useCallback(async () => {
     if (!user) return;
@@ -183,7 +185,6 @@ export default function Reports() {
 
   const handleLogout = () => {
     if (logout) logout();
-    navigate("/login");
   };
 
   if (user === null) {

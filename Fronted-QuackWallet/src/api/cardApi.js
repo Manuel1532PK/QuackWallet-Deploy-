@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/api'; // Ajusta según tu URL
+const API_URL = '/api';
 
 export const cardApi = {
   getCards: (userId) => 

@@ -7,6 +7,7 @@ const SmartContractsRoutes = require('./routes/smartcontracts_routes');
 const cardRoutes = require('./routes/card_routes');
 const historialRoutes = require('./routes/history_routes');
 const reportRoutes = require('./routes/report_routes');
+const notificationRoutes = require('./routes/notification_routes');
 const path = require('path');
 require('dotenv').config();
 
@@ -43,6 +44,7 @@ app.use('/api/smartcontracts', SmartContractsRoutes);
 app.use('/api/history', historialRoutes);
 app.use('/api/cards', cardRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Servir archivos estáticos desde la carpeta uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -127,7 +129,13 @@ app.listen(PORT, () => {
     console.log('GET /api/history/tranfer/history/:userId → Historial de transferencias');
     console.log('GET /api/history/withdraw/history/:userId → Historial de retiros')
     console.log('GET /api/history/deposit/history/:userId → Historial de depósitos');
-    console.log('------------------💳cards------------------');
+    console.log('------------------🔔notifications------------------');
+console.log('Notificaciones: /api/notifications');
+console.log('POST /api/notifications/create/:userId → Crear transacción pendiente');
+console.log('GET /api/notifications/pending/:userId → Notificaciones pendientes');
+console.log('PUT /api/notifications/:id/respond → Responder notificación');
+console.log('GET /api/notifications/history/:userId → Historial de notificaciones');
+console.log('------------------💳cards------------------');
     console.log('Tarjetas: /api/cards');
     console.log('POST /api/cards/create/:userId → Crear tarjeta');
     console.log('GET /api/cards/user/:userId → Obtener tarjetas de un usuario');
